@@ -60,6 +60,7 @@ document.addEventListener('DOMContentLoaded', () => {
     initCharts();
     initLedgerExport();
     initBankUpload();
+    initDashboardMetrics();
 
     // -------------------------
     // Journal Entry Logic
@@ -104,9 +105,9 @@ function initCharts() {
         new Chart(ctxDonut, {
             type: 'doughnut',
             data: {
-                labels: ['Raw Materials', 'Salaries', 'Rent', 'Utilities', 'Maintenance'],
+                labels: window.APP_CONFIG.expenseBreakdown.labels,
                 datasets: [{
-                    data: [120000, 85000, 24000, 8500, 4500],
+                    data: window.APP_CONFIG.expenseBreakdown.data,
                     backgroundColor: [
                         '#0F172A', // Deep Navy
                         '#64748B', // Slate Grey
@@ -141,17 +142,17 @@ function initCharts() {
         new Chart(ctxBar, {
             type: 'bar',
             data: {
-                labels: ['Oct', 'Nov', 'Dec', 'Jan', 'Feb', 'Mar'],
+                labels: window.APP_CONFIG.cashFlow.months,
                 datasets: [
                     {
                         label: 'Cash In',
-                        data: [45000, 52000, 38000, 65000, 48000, 72000],
+                        data: window.APP_CONFIG.cashFlow.inflow,
                         backgroundColor: '#10B981', // Success green
                         borderRadius: 4
                     },
                     {
                         label: 'Cash Out',
-                        data: [32000, 41000, 35000, 42000, 39000, 51000],
+                        data: window.APP_CONFIG.cashFlow.outflow,
                         backgroundColor: '#0F172A', // Deep Navy
                         borderRadius: 4
                     }
@@ -397,10 +398,9 @@ function initDataSync() {
                 bar.style.backgroundColor = 'var(--success)';
                 
                 setTimeout(() => {
-                    // Update history table
-                    const typeText = typeSelect.options[typeSelect.selectedIndex].text;
-                    const now = new Date();
-                    const dateStr = now.toLocaleDateString('en-US', { month: 'short', day: 'numeric', hour: '2-digit', minute: '2-digit' });
+                    // Clear empty state if this is first record
+                    const emptyRow = historyBody.querySelector('.empty-row');
+                    if (emptyRow) emptyRow.remove();
 
                     const newRow = document.createElement('tr');
                     newRow.innerHTML = `
@@ -439,6 +439,20 @@ function initDataSync() {
         }
         lucide.createIcons();
     });
+
+    const sampleBtn = document.getElementById('btn-download-sample-csv');
+    if (sampleBtn) {
+        sampleBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            const csvContent = "Date,Project,Description,Account,Debit,Credit,RefID\n2026-03-25,Shah Alam Bungalow,Hardware Supplies,Cost of Goods Sold,500.00,0,PUR-101\n2026-03-25,Shah Alam Bungalow,Payment for Supplies,Cash in Bank,0,500.00,PUR-101";
+            const blob = new Blob([csvContent], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.setAttribute('href', url);
+            a.setAttribute('download', 'Junkho_Import_Template.csv');
+            a.click();
+        });
+    }
 }
 
 function initLedgerExport() {
@@ -581,13 +595,24 @@ function initProjectMgmt() {
         // Add to projects table
         const tr = document.createElement('tr');
         tr.innerHTML = `
-            <td><strong>${name}</strong></td>
-            <td>${location}</td>
-            <td>MYR ${parseFloat(val).toLocaleString()}</td>
+            <td class="project-name"><strong>${name}</strong></td>
+            <td class="project-location">${location}</td>
+            <td class="project-value">MYR ${parseFloat(val).toLocaleString()}</td>
             <td>MYR 0.00</td>
             <td>0%</td>
             <td><span class="status-badge active">Planning</span></td>
+            <td class="text-right">
+                <div class="flex-gap justify-end">
+                    <button class="btn-icon btn-sm edit-project-btn" title="Edit"><i data-lucide="edit-3"></i></button>
+                    <button class="btn-icon btn-sm delete-project-btn text-negative" title="Delete"><i data-lucide="trash-2"></i></button>
+                </div>
+            </td>
         `;
+
+        // Clear empty state if this is first project
+        const emptyRow = projectListBody.querySelector('.empty-row');
+        if (emptyRow) emptyRow.remove();
+
         projectListBody.insertBefore(tr, projectListBody.firstChild);
 
         alert(`Project "${name}" has been created and is now available in your records.`);
@@ -596,6 +621,35 @@ function initProjectMgmt() {
 
     if (quickAddBtn) quickAddBtn.addEventListener('click', addNewProject);
     if (mainAddBtn) mainAddBtn.addEventListener('click', addNewProject);
+
+    // Delegate Edit/Delete clicks
+    projectListBody.addEventListener('click', (e) => {
+        const btn = e.target.closest('button');
+        if (!btn) return;
+
+        const tr = btn.closest('tr');
+        if (btn.classList.contains('delete-project-btn')) {
+            if (confirm(`Are you sure you want to remove this project?`)) {
+                tr.remove();
+                if (projectListBody.children.length === 0) {
+                    projectListBody.innerHTML = '<tr class="empty-row"><td colspan="7" class="text-center py-8 text-muted">No active projects. Use the button above to add a new project.</td></tr>';
+                }
+            }
+        } else if (btn.classList.contains('edit-project-btn')) {
+            const currentName = tr.querySelector('.project-name').textContent;
+            const currentLoc = tr.querySelector('.project-location').textContent;
+            const currentVal = tr.querySelector('.project-value').textContent;
+
+            const newName = prompt("Edit Project Name:", currentName);
+            if (newName) tr.querySelector('.project-name').innerHTML = `<strong>${newName}</strong>`;
+            
+            const newLoc = prompt("Edit Project Location:", currentLoc);
+            if (newLoc !== null) tr.querySelector('.project-location').textContent = newLoc;
+
+            const newVal = prompt("Edit Project Value (MYR):", currentVal.replace(/[^\d.]/g, ''));
+            if (newVal !== null) tr.querySelector('.project-value').textContent = `MYR ${parseFloat(newVal).toLocaleString()}`;
+        }
+    });
 }
 
 function initReportControls() {
@@ -633,57 +687,139 @@ function initReportControls() {
     if (pdfBtn) pdfBtn.addEventListener('click', handleOutput);
 }
 
+function initDashboardMetrics() {
+    if (!window.APP_CONFIG) return;
+
+    const formatMYR = (val) => new Intl.NumberFormat('en-MY', { style: 'currency', currency: 'MYR' }).format(val);
+    
+    // Fill Dashboard Metrics
+    document.getElementById('metric-cash').textContent = formatMYR(window.APP_CONFIG.metrics.cashOnHand);
+    document.getElementById('metric-profit').textContent = formatMYR(window.APP_CONFIG.metrics.netProfitYTD);
+    document.getElementById('metric-payables').textContent = formatMYR(window.APP_CONFIG.metrics.totalPayables);
+    document.getElementById('metric-receivables').textContent = formatMYR(window.APP_CONFIG.metrics.totalReceivables);
+
+    // Fill Trends
+    document.getElementById('trend-cash').innerHTML = `<i data-lucide="trending-up"></i> ${window.APP_CONFIG.metrics.cashTrend} from last month`;
+    document.getElementById('trend-profit').innerHTML = `<i data-lucide="trending-up"></i> ${window.APP_CONFIG.metrics.profitTrend} from last month`;
+    document.getElementById('trend-payables').innerHTML = `<i data-lucide="trending-up"></i> ${window.APP_CONFIG.metrics.payablesTrend} from last month`;
+    document.getElementById('trend-receivables').innerHTML = `<i data-lucide="trending-up"></i> ${window.APP_CONFIG.metrics.receivablesTrend} from last month`;
+
+    // Fill Sidebar info
+    document.getElementById('company-display-name').textContent = window.APP_CONFIG.company.name;
+    
+    lucide.createIcons();
+}
+
 function initComplianceLogic() {
     const payrollBtn = document.getElementById('btn-process-payroll');
     const sstBtn = document.getElementById('btn-download-sst');
+    const addEmployeeBtn = document.getElementById('btn-add-employee');
+    const payrollBody = document.getElementById('payroll-body');
+    const totalNetDisplay = document.getElementById('total-net-payroll');
+
+    const formatCurr = (v) => new Intl.NumberFormat('en-MY', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(v);
+
+    if (addEmployeeBtn) {
+        addEmployeeBtn.addEventListener('click', () => {
+            const name = prompt("Enter Employee Name / Position:");
+            if (!name) return;
+            const gross = parseFloat(prompt("Enter Monthly Gross Salary (MYR):") || "0");
+            
+            // Basic Statutory Logic (Sdn Bhd Malaysia)
+            const epf = gross * 0.11;
+            const socso_eis = gross > 5000 ? 25.00 : gross * 0.005; // Mock logic for demo
+            let pcb = 0;
+            if (gross > 10000) pcb = (gross - 10000) * 0.20 + 500;
+            else if (gross > 5000) pcb = (gross - 5000) * 0.10 + 100;
+
+            const net = gross - epf - socso_eis - pcb;
+
+            const emptyRow = payrollBody.querySelector('.empty-row');
+            if (emptyRow) emptyRow.remove();
+
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${name}</strong></td>
+                <td class="amount-col">${formatCurr(gross)}</td>
+                <td class="amount-col text-secondary">${formatCurr(epf)}</td>
+                <td class="amount-col text-secondary">${formatCurr(socso_eis)}</td>
+                <td class="amount-col text-secondary">${formatCurr(pcb)}</td>
+                <td class="amount-col font-bold">MYR ${formatCurr(net)}</td>
+                <td class="text-right">
+                    <button class="btn-icon btn-sm text-negative remove-emp"><i data-lucide="trash-2"></i></button>
+                </td>
+            `;
+            payrollBody.appendChild(tr);
+            lucide.createIcons();
+            updateTotalPayroll();
+        });
+    }
+
+    payrollBody.addEventListener('click', (e) => {
+        if (e.target.closest('.remove-emp')) {
+            e.target.closest('tr').remove();
+            updateTotalPayroll();
+            if (payrollBody.children.length === 0) {
+                payrollBody.innerHTML = '<tr class="empty-row"><td colspan="7" class="text-center py-8 text-muted">No employees added.</td></tr>';
+            }
+        }
+    });
+
+    function updateTotalPayroll() {
+        let total = 0;
+        const rows = payrollBody.querySelectorAll('tr:not(.empty-row)');
+        rows.forEach(r => {
+            const netStr = r.cells[5].textContent.replace('MYR ', '').replace(/,/g, '');
+            total += parseFloat(netStr || 0);
+        });
+        totalNetDisplay.textContent = `MYR ${formatCurr(total)}`;
+    }
 
     if (payrollBtn) {
         payrollBtn.addEventListener('click', () => {
+            const total = totalNetDisplay.textContent;
+            if (total === 'MYR 0.00') {
+                alert("Please add employees before processing payroll.");
+                return;
+            }
             payrollBtn.disabled = true;
-            payrollBtn.innerHTML = '<i data-lucide="refresh-cw" class="spin"></i> Computing...';
+            payrollBtn.innerHTML = '<i data-lucide="refresh-cw" class="spin"></i> Posting to Ledger...';
             lucide.createIcons();
 
             setTimeout(() => {
-                alert("Validating PERKESO and LHDN tax brackets for March 2026...");
-                setTimeout(() => {
-                    alert("Payroll Processed successfully!\n\nTotal Net Pay: MYR 10,813.90\nTotal EPF Contribution: MYR 1,397.00");
-                    payrollBtn.disabled = false;
-                    payrollBtn.innerHTML = '<i data-lucide="plus"></i> Process Monthly Payroll';
-                    lucide.createIcons();
-                }, 1000);
-            }, 800);
+                alert(`SUCCESS: Monthly Payroll confirmed.\n\nTotal Net Disbursed: ${total}\nThis has been recorded in your General Ledger as Salary Expenses.`);
+                payrollBtn.disabled = false;
+                payrollBtn.innerHTML = '<i data-lucide="check-circle"></i> Confirm payroll & Post Journal';
+                lucide.createIcons();
+            }, 1200);
         });
     }
 
     if (sstBtn) {
         sstBtn.addEventListener('click', () => {
+            const outputTax = document.getElementById('sst-output-tax').value || "0";
+            const period = document.getElementById('sst-tax-period').value || "N/A";
+
             const csvData = [
-                ["Taxable Period", "Jan - Feb 2026"],
-                ["SSM Number", "202503225958 (003764803-T)"],
+                ["Taxable Period", period],
+                ["SSM Number", window.APP_CONFIG.company.ssm],
                 ["", ""],
-                ["Category", "Amount (MYR)", "Tax Rate (%)", "Tax Amount (MYR)"],
-                ["Local Sales (Interior Design)", "207500.00", "6%", "12450.00"],
-                ["Export Sales", "45000.00", "0%", "0.00"],
-                ["", "", "", ""],
-                ["TOTAL SST PAYABLE", "", "", "12450.00"]
+                ["Category", "Tax Amount (MYR)"],
+                ["Total Output Tax (Sales)", outputTax],
+                ["Total Input Tax (Credit)", "0.00"],
+                ["", ""],
+                ["TOTAL SST PAYABLE", outputTax]
             ];
 
-            let csvRows = [];
-            for (let i = 0; i < csvData.length; i++) {
-                csvRows.push(csvData[i].join(','));
-            }
-
+            let csvRows = csvData.map(row => row.join(','));
             const blob = new Blob([csvRows.join('\n')], { type: 'text/csv' });
             const url = window.URL.createObjectURL(blob);
             const a = document.createElement('a');
-            a.setAttribute('hidden', '');
             a.setAttribute('href', url);
-            a.setAttribute('download', 'Junkho_SST_02_Report.csv');
-            document.body.appendChild(a);
+            a.setAttribute('download', `SST_02_${period.replace(/\s+/g, '_')}.csv`);
             a.click();
-            document.body.removeChild(a);
             
-            alert("SST-02 Summary Report generated successfully.");
+            alert(`SST-02 Filing Report for ${period} generated successfully.`);
         });
     }
 }

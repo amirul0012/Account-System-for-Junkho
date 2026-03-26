@@ -82,9 +82,10 @@
                     <div class="user-avatar">AM</div>
                     <div class="user-details">
                         <span class="user-name">Amirul</span>
-                        <span class="user-role">Admin</span>
+                        <span class="user-role" id="company-display-name">Junkho Studio</span>
                     </div>
                 </div>
+                <a href="USER_GUIDE.html" target="_blank" class="nav-link"><i data-lucide="help-circle"></i> User Guide & SOP</a>
                 <a href="#" class="nav-link settings-link"><i data-lucide="settings"></i> Settings</a>
             </div>
         </aside>
@@ -122,32 +123,32 @@
                                 <span class="metric-title">Cash on Hand</span>
                                 <i data-lucide="wallet"></i>
                             </div>
-                            <div class="metric-value">MYR 124,500.00</div>
-                            <div class="metric-trend positive"><i data-lucide="trending-up"></i> +5.2% from last month</div>
+                            <div class="metric-value text-primary" id="metric-cash">MYR 0.00</div>
+                            <div class="metric-trend" id="trend-cash">--</div>
                         </div>
                         <div class="metric-card">
                             <div class="metric-header">
                                 <span class="metric-title">Net Profit (YTD)</span>
                                 <i data-lucide="pie-chart"></i>
                             </div>
-                            <div class="metric-value">MYR 82,340.00</div>
-                            <div class="metric-trend positive"><i data-lucide="trending-up"></i> +12.4% from last month</div>
+                            <div class="metric-value text-primary" id="metric-profit">MYR 0.00</div>
+                            <div class="metric-trend" id="trend-profit">--</div>
                         </div>
                         <div class="metric-card">
                             <div class="metric-header">
                                 <span class="metric-title">Total Payables</span>
                                 <i data-lucide="credit-card"></i>
                             </div>
-                            <div class="metric-value">MYR 34,120.00</div>
-                            <div class="metric-trend negative"><i data-lucide="trending-up"></i> +2.1% from last month</div>
+                            <div class="metric-value text-secondary" id="metric-payables">MYR 0.00</div>
+                            <div class="metric-trend" id="trend-payables">--</div>
                         </div>
                         <div class="metric-card">
                             <div class="metric-header">
                                 <span class="metric-title">Total Receivables</span>
                                 <i data-lucide="download"></i>
                             </div>
-                            <div class="metric-value">MYR 45,600.00</div>
-                            <div class="metric-trend positive"><i data-lucide="trending-down"></i> -1.5% from last month</div>
+                            <div class="metric-value text-primary" id="metric-receivables">MYR 0.00</div>
+                            <div class="metric-trend" id="trend-receivables">--</div>
                         </div>
                     </div>
 
@@ -183,26 +184,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>2026-03-24</td>
-                                        <td>Hardware Supplies - Plywood</td>
-                                        <td>Cost of Goods Sold</td>
-                                        <td class="negative">-2,450.00</td>
-                                        <td><span class="status-badge success">Cleared</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>2026-03-22</td>
-                                        <td>Invoice #INV-2603 - Client Deposit</td>
-                                        <td>Sales Revenue</td>
-                                        <td class="positive">+15,000.00</td>
-                                        <td><span class="status-badge success">Cleared</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>2026-03-20</td>
-                                        <td>CNC Router Maintenance</td>
-                                        <td>Repairs & Maintenance</td>
-                                        <td class="negative">-850.00</td>
-                                        <td><span class="status-badge pending">Pending</span></td>
+                                    <tr class="empty-state">
+                                        <td colspan="5" class="text-center py-8 text-muted">No recent activity. Post your first journal entry to begin.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -349,41 +332,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>2026-03-24</td>
-                                        <td>501 - Cost of Goods Sold</td>
-                                        <td>Hardware Supplies - Plywood</td>
-                                        <td>PUR-102</td>
-                                        <td class="amount-col">2,450.00</td>
-                                        <td class="amount-col"></td>
-                                        <td><span class="audit-tag">Amirul</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>2026-03-24</td>
-                                        <td>101 - Cash in Bank</td>
-                                        <td>Hardware Supplies - Plywood</td>
-                                        <td>PUR-102</td>
-                                        <td class="amount-col"></td>
-                                        <td class="amount-col">2,450.00</td>
-                                        <td><span class="audit-tag">Amirul</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>2026-03-22</td>
-                                        <td>101 - Cash in Bank</td>
-                                        <td>Invoice #INV-2603 - Client Deposit</td>
-                                        <td>INV-2603</td>
-                                        <td class="amount-col">15,000.00</td>
-                                        <td class="amount-col"></td>
-                                        <td><span class="audit-tag">System</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>2026-03-22</td>
-                                        <td>401 - Sales Revenue</td>
-                                        <td>Invoice #INV-2603 - Client Deposit</td>
-                                        <td>INV-2603</td>
-                                        <td class="amount-col"></td>
-                                        <td class="amount-col">15,000.00</td>
-                                        <td><span class="audit-tag">System</span></td>
+                                    <tr class="empty-row">
+                                        <td colspan="7" class="text-center py-8 text-muted">The ledger is currently empty. Post journal entries to see records here.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -408,15 +358,15 @@
                         <div class="recon-summary mb-4">
                             <div class="recon-box">
                                 <span>Statement Balance</span>
-                                <h4>MYR 125,000.00</h4>
+                                <h4>MYR 0.00</h4>
                             </div>
                             <div class="recon-box">
                                 <span>System Balance</span>
-                                <h4>MYR 124,500.00</h4>
+                                <h4>MYR 0.00</h4>
                             </div>
                             <div class="recon-box difference">
                                 <span>Difference</span>
-                                <h4>MYR 500.00</h4>
+                                <h4>MYR 0.00</h4>
                             </div>
                         </div>
 
@@ -432,26 +382,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr class="matched-row">
-                                        <td>2026-03-24</td>
-                                        <td>POS HARDWARE CITY SDN BHD</td>
-                                        <td class="negative">-2,450.00</td>
-                                        <td><span class="match-badge exact"><i data-lucide="check-circle"></i> Exact Match</span></td>
-                                        <td><button class="btn-secondary btn-sm">Confirm</button></td>
-                                    </tr>
-                                    <tr class="unmatched-row">
-                                        <td>2026-03-23</td>
-                                        <td>BANK CHARGES</td>
-                                        <td class="negative">-15.00</td>
-                                        <td><span class="match-badge none">No Match</span></td>
-                                        <td><button class="btn-primary btn-sm">Create Rule</button></td>
-                                    </tr>
-                                    <tr class="matched-row">
-                                        <td>2026-03-22</td>
-                                        <td>IBG TRANSFER FROM CLIENT A</td>
-                                        <td class="positive">+15,000.00</td>
-                                        <td><span class="match-badge exact"><i data-lucide="check-circle"></i> Exact Match</span></td>
-                                        <td><button class="btn-secondary btn-sm">Confirm</button></td>
+                                    <tr class="empty-state">
+                                        <td colspan="5" class="text-center py-8 text-muted">Bank records are currently clear. Upload a CSV statement to begin matching.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -484,32 +416,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>FA-001</td>
-                                        <td>CNC Router Machine V3</td>
-                                        <td>Machinery</td>
-                                        <td>2023-05-10</td>
-                                        <td>85,000.00</td>
-                                        <td>51,000.00</td>
-                                        <td><span class="status-badge active">Active</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>FA-002</td>
-                                        <td>Toyota Hilux (Transport)</td>
-                                        <td>Vehicles</td>
-                                        <td>2024-01-15</td>
-                                        <td>110,000.00</td>
-                                        <td>88,000.00</td>
-                                        <td><span class="status-badge active">Active</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td>FA-003</td>
-                                        <td>Table Saw - Heavy Duty</td>
-                                        <td>Equipment</td>
-                                        <td>2022-08-20</td>
-                                        <td>12,500.00</td>
-                                        <td>3,000.00</td>
-                                        <td><span class="status-badge active">Active</span></td>
+                                    <tr class="empty-row text-center">
+                                        <td colspan="7" class="py-8 text-muted">No fixed assets registered. Add equipment or machinery assets here.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -636,6 +544,9 @@
                                         <i data-lucide="file-text" id="import-icon" class="upload-icon"></i>
                                         <h4 id="import-title">Upload Documents</h4>
                                         <p class="text-muted">Drag & drop your <strong>PDF</strong>, CSV or Excel files.</p>
+                                        <div class="mt-2">
+                                            <a href="#" class="text-xs text-primary underline" id="btn-download-sample-csv">Download Sample CSV Template</a>
+                                        </div>
                                         <input type="file" class="hidden-input" id="import-file" accept=".pdf, .csv, .xlsx, .xls">
                                         <p id="selected-file-name" class="text-primary mt-2 text-sm font-medium hidden"></p>
                                     </div>
@@ -670,23 +581,8 @@
                                             </tr>
                                         </thead>
                                         <tbody id="import-history-body">
-                                            <tr>
-                                                <td>Mar 24, 10:30 AM</td>
-                                                <td>Sales Invoices</td>
-                                                <td>125</td>
-                                                <td><span class="status-badge success">Completed</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Mar 23, 04:15 PM</td>
-                                                <td>Inventory</td>
-                                                <td>42</td>
-                                                <td><span class="status-badge success">Completed</span></td>
-                                            </tr>
-                                            <tr>
-                                                <td>Mar 20, 09:00 AM</td>
-                                                <td>Quotations</td>
-                                                <td>8</td>
-                                                <td><span class="status-badge pending">Warning</span></td>
+                                            <tr class="empty-row text-center">
+                                                <td colspan="4" class="py-6 text-muted">No sync activity yet. Upload a file to begin.</td>
                                             </tr>
                                         </tbody>
                                     </table>
@@ -717,24 +613,12 @@
                                         <th>Expenses</th>
                                         <th>Margin</th>
                                         <th>Status</th>
+                                        <th class="text-right">Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody id="project-list-body">
-                                    <tr>
-                                        <td><strong>Ampang Condo Reno</strong></td>
-                                        <td>Ampang Hilir</td>
-                                        <td>MYR 120,000.00</td>
-                                        <td>MYR 45,000.00</td>
-                                        <td>62.5%</td>
-                                        <td><span class="status-badge success">In Progress</span></td>
-                                    </tr>
-                                    <tr>
-                                        <td><strong>Shah Alam Bungalow</strong></td>
-                                        <td>Setia Alam</td>
-                                        <td>MYR 450,000.00</td>
-                                        <td>MYR 180,000.00</td>
-                                        <td>60%</td>
-                                        <td><span class="status-badge active">Planning</span></td>
+                                    <tr class="empty-row">
+                                        <td colspan="7" class="text-center py-8 text-muted">No active projects. Use the button above to add a new project.</td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -748,41 +632,33 @@
                         <div class="panel-header flex-between mb-4">
                             <div>
                                 <h3>Statutory Payroll (Malaysia)</h3>
-                                <p class="subtitle">Auto-calculates EPF, SOCSO, EIS & PCB.</p>
+                                <p class="subtitle">Enter employee pay to calculate EPF, SOCSO, EIS & PCB.</p>
                             </div>
-                            <button class="btn-primary" id="btn-process-payroll"><i data-lucide="plus"></i> Process Monthly Payroll</button>
+                            <button class="btn-primary" id="btn-add-employee"><i data-lucide="plus-circle"></i> Add Employee</button>
                         </div>
                         <div class="table-container">
                             <table class="data-table">
                                 <thead>
                                     <tr>
-                                        <th>Employee</th>
-                                        <th>Gross Pay</th>
-                                        <th>EPF (11%)</th>
-                                        <th>SOCSO/EIS</th>
-                                        <th>PCB (MTD)</th>
-                                        <th>Net Pay</th>
+                                        <th>Employee Name / Position</th>
+                                        <th class="amount-col">Gross Pay</th>
+                                        <th class="amount-col">EPF (11%)</th>
+                                        <th class="amount-col">SOCSO + EIS</th>
+                                        <th class="amount-col">PCB (MTD)</th>
+                                        <th class="amount-col">Net Pay</th>
+                                        <th class="text-right">Actions</th>
                                     </tr>
                                 </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>Chong Wei (Creative Lead)</td>
-                                        <td>8,500.00</td>
-                                        <td>935.00</td>
-                                        <td>52.75</td>
-                                        <td>412.00</td>
-                                        <td><strong>7,100.25</strong></td>
-                                    </tr>
-                                    <tr>
-                                        <td>Amirah (Admin Manager)</td>
-                                        <td>4,200.00</td>
-                                        <td>462.00</td>
-                                        <td>24.35</td>
-                                        <td>0.00</td>
-                                        <td><strong>3,713.65</strong></td>
+                                <tbody id="payroll-body">
+                                    <tr class="empty-row">
+                                        <td colspan="7" class="text-center py-8 text-muted">No employees added. Use the button to add staff and directors.</td>
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div class="mt-4 flex-between">
+                            <div>Total Net Payroll: <strong id="total-net-payroll">MYR 0.00</strong></div>
+                            <button class="btn-primary" id="btn-process-payroll"><i data-lucide="check-circle"></i> Confirm payroll & Post Journal</button>
                         </div>
                     </div>
                 </section>
@@ -797,17 +673,18 @@
                             </div>
                             <button class="btn-secondary" id="btn-download-sst"><i data-lucide="download"></i> Download SST-02 Form</button>
                         </div>
-                        <div class="row">
+                                <div class="row">
                             <div class="col-md-6 mb-4">
                                 <div class="metric-card">
                                     <p class="text-sm font-medium text-secondary">Output Tax (Sales)</p>
-                                    <h2 class="text-primary">MYR 12,450.00</h2>
+                                    <input type="number" id="sst-output-tax" class="text-primary text-2xl font-bold border-none w-full bg-transparent" value="0.00">
+                                    <p class="text-xs text-muted mt-2">Adjust this figure for your current filing.</p>
                                 </div>
                             </div>
                             <div class="col-md-6 mb-4">
                                 <div class="metric-card">
                                     <p class="text-sm font-medium text-secondary">Taxable Period</p>
-                                    <h2 class="text-primary">Jan - Feb 2026</h2>
+                                    <input type="text" id="sst-tax-period" class="text-primary text-2xl font-bold border-none w-full bg-transparent" placeholder="e.g. Jan - Feb 2026">
                                 </div>
                             </div>
                         </div>
@@ -833,20 +710,8 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr>
-                                        <td>2026-03-25 00:22</td>
-                                        <td><span class="audit-tag">Amirul</span></td>
-                                        <td><span class="status-badge active">UPDATE</span></td>
-                                        <td>General Ledger</td>
-                                        <td>Generated CSV Export</td>
-                                    </tr>
-                                    <tr>
-                                        <td>2026-03-25 00:15</td>
-                                        <td><span class="audit-tag">Amirul</span></td>
-                                        <td><span class="status-badge success">CREATE</span></td>
-                                        <td>Project</td>
-                                        <td>Created "Damansara Attic"</td>
-                                    </tr>
+                                    <tr class="empty-row">
+                                        <td colspan="5" class="text-center py-8 text-muted">No security logs recorded yet.</td>                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -898,6 +763,7 @@
         </main>
     </div>
 
+    <script src="config.js"></script>
     <script src="app.js"></script>
 </body>
 </html>

@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Junkho Studio | Accounting System User Guide</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #0F172A;
+            --secondary: #64748B;
+            --accent: #3B82F6;
+            --success: #10B981;
+            --warning: #F59E0B;
+            --negative: #EF4444;
+            --bg-light: #F8FAFC;
+            --white: #FFFFFF;
+            --border: #E2E8F0;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; line-height: 1.6; background: var(--bg-light); color: var(--primary); }
+        
+        .header { background: var(--primary); color: var(--white); padding: 4rem 2rem; text-align: center; }
+        .header h1 { font-size: 2.5rem; margin-bottom: 0.5rem; }
+        .header p { opacity: 0.8; font-weight: 300; }
+
+        .container { max-width: 900px; margin: -3rem auto 4rem; padding: 2rem; background: var(--white); border-radius: 1rem; box-shadow: 0 10px 25px rgba(0,0,0,0.05); }
+
+        .module-section { margin-bottom: 4rem; }
+        .module-header { display: flex; align-items: center; gap: 1rem; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 2px solid var(--border); }
+        .module-header i { color: var(--accent); }
+        .module-header h2 { font-size: 1.5rem; color: var(--primary); }
+
+        .step-block { margin-bottom: 2rem; }
+        .step-title { display: flex; align-items: center; gap: 0.75rem; font-weight: 600; margin-bottom: 0.5rem; color: var(--primary); }
+        .step-number { background: var(--accent); color: var(--white); width: 24px; height: 24px; border-radius: 12px; display: grid; place-items: center; font-size: 0.75rem; }
+        
+        .content-card { background: #f1f5f9; padding: 1.5rem; border-radius: 0.75rem; margin-bottom: 1rem; font-size: 0.95rem; }
+        .content-card code { background: #cbd5e1; padding: 0.2rem 0.4rem; border-radius: 0.25rem; font-family: monospace; }
+
+        .tip-box { display: flex; gap: 1rem; background: #ecfdf5; border: 1px solid #10b98144; padding: 1rem; border-radius: 0.5rem; color: #065f46; font-size: 0.9rem; margin-top: 1rem; }
+        .tip-box i { color: var(--success); }
+
+        .footer { text-align: center; padding: 2rem; color: var(--secondary); font-size: 0.85rem; border-top: 1px solid var(--border); margin-top: 4rem; }
+
+        @media (max-width: 768px) {
+            .container { margin-top: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header class="header">
+        <h1>Junkho Studio</h1>
+        <p>Accounting System User Guide & SOP - Sdn Bhd Edition</p>
+    </header>
+
+    <div class="container">
+        <!-- Dashboard Configuration -->
+        <section class="module-section">
+            <div class="module-header">
+                <i data-lucide="settings"></i>
+                <h2>1. Initial Configuration</h2>
+            </div>
+            <div class="step-block">
+                <div class="step-title"><span class="step-number">1</span> Set Local Company Details</div>
+                <div class="content-card">
+                    Open <code>config.js</code> file in your main folder. Update the <code>metrics</code> values with your current <strong>Cash Balance</strong>. This ensures your dashboard starts from your real bank balance.
+                </div>
+                <div class="tip-box">
+                    <i data-lucide="info"></i>
+                    <div><strong>Tip:</strong> Always double check your <code>ssm</code> and <code>address</code> fields in <code>config.js</code> as they appear on your official reports.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Journal Entry -->
+        <section class="module-section">
+            <div class="module-header">
+                <i data-lucide="edit-3"></i>
+                <h2>2. Daily Record Keeping (Double-Entry)</h2>
+            </div>
+            <div class="step-block">
+                <div class="step-title"><span class="step-number">1</span> Standard Expenses</div>
+                <div class="content-card">
+                    Go to <strong>Journal Entry</strong>. For every expense, use two lines:
+                    <ul>
+                        <li><strong>Debit</strong>: The Expense Account (e.g. Cost of Goods Sold)</li>
+                        <li><strong>Credit</strong>: Cash in Bank (101)</li>
+                        <li><em>Always select the related Project to track profit margins properly.</em></li>
+                    </ul>
+                </div>
+            </div>
+            <div class="step-block">
+                <div class="step-title"><span class="step-number">2</span> Incoming Revenue</div>
+                <div class="content-card">
+                    When a client pays you:
+                    <ul>
+                        <li><strong>Debit</strong>: Cash in Bank (MYR In)</li>
+                        <li><strong>Credit</strong>: Sales Revenue</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Project Management -->
+        <section class="module-section">
+            <div class="module-header">
+                <i data-lucide="briefcase"></i>
+                <h2>3. Project Tracking & Margins</h2>
+            </div>
+            <div class="step-block">
+                <div class="step-title"><span class="step-number">1</span> New Renovations</div>
+                <div class="content-card">
+                    Before recording an invoice, click <strong>Create New Project</strong> in the Project List. Assign a Name, Location, and Value. All future journal entries will allow you to "Tag" this project.
+                </div>
+                <div class="tip-box">
+                    <i data-lucide="check-circle"></i>
+                    <div>The system automatically calculates <strong>Net Margin %</strong> based on the total expenses tagged to that project.</div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Compliance Module -->
+        <section class="module-section">
+            <div class="module-header">
+                <i data-lucide="shield-check"></i>
+                <h2>4. Malaysian Statutory Modules</h2>
+            </div>
+            <div class="step-block">
+                <div class="step-title"><span class="step-number">1</span> Payroll (EPF/SOCSO/PCB)</div>
+                <div class="content-card">
+                    Use the <strong>Statutory Payroll</strong> tab to add Employees or Directors. Enter their <strong>Gross Salary</strong>, and the system automatically calculates the Malaysian statutory deductions. Click "Confirm" at the end of every month.
+                </div>
+            </div>
+            <div class="step-block">
+                <div class="step-title"><span class="step-number">2</span> SST-02 Filing</div>
+                <div class="content-card">
+                    Every two months, check your <strong>SST-02 Filing Module</strong>. Type in your Output Tax for the period and click <strong>Download SST-02 Form</strong> to generate your filing summary ready for LHDN.
+                </div>
+            </div>
+        </section>
+
+        <!-- Bulk Sync -->
+        <section class="module-section">
+            <div class="module-header">
+                <i data-lucide="database"></i>
+                <h2>5. Bulk Import & Data Sync</h2>
+            </div>
+            <div class="step-block">
+                <div class="step-title"><span class="step-number">1</span> Transitioning from Excel</div>
+                <div class="content-card">
+                    If you have 100+ transactions from your previous system, use the <strong>Download Sample CSV Template</strong> link in the Data Sync tab. Paste your data in and upload it to import your entire history in seconds.
+                </div>
+            </div>
+        <!-- Multi-Device Access -->
+        <section class="module-section">
+            <div class="module-header">
+                <i data-lucide="monitor-smartphone"></i>
+                <h2>6. Access from Other Laptops</h2>
+            </div>
+            <div class="step-block">
+                <div class="step-title"><span class="step-number">1</span> Method A: Cloud Sync (Easiest)</div>
+                <div class="content-card">
+                    Move your entire "Account System for Junkho" folder into a cloud-synced drive like <strong>OneDrive</strong>, <strong>Google Drive</strong>, or <strong>Dropbox</strong>. When you save a record on one laptop, it will automatically update on your other devices.
+                </div>
+            </div>
+            <div class="step-block">
+                <div class="step-title"><span class="step-number">2</span> Method B: GitHub Sync</div>
+                <div class="content-card">
+                    Use <code>git push</code> on your current laptop to save your data to the cloud. On your other laptop, run <code>git pull</code> to fetch the latest records. 
+                </div>
+                <div class="tip-box">
+                    <i data-lucide="shield"></i>
+                    <div><strong>Security Note:</strong> Your data is currently stored in <code>config.js</code>. Keeping this file synced is the key to seeing your data on multiple laptops.</div>
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            &copy; 2026 Junkho Studio Accounting System. Built for Audit-Ready Sdn Bhd Compliance.
+        </footer>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+</html>
