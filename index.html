@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Junkho Studio - Accounting System</title>
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <!-- Styles -->
+    <link rel="stylesheet" href="index.css">
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-container" class="login-wrapper">
+        <div class="login-card">
+            <div class="login-logo">
+                <img src="logo.png" alt="Junkho Studio Logo">
+            </div>
+            <h2>Welcome Back</h2>
+            <p>Sign in to your accounting dashboard</p>
+            <div id="login-error" class="login-error">Invalid Username or Password.</div>
+            <form id="login-form" class="app-form">
+                <div class="form-group mb-4">
+                    <label>Username</label>
+                    <input type="text" id="login-username" placeholder="e.g. admin" required>
+                </div>
+                <div class="form-group mb-4">
+                    <label>Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" required>
+                </div>
+                <button type="submit" class="btn-primary" style="width: 100%; justify-content: center;">Sign In</button>
+            </form>
+            <div class="mt-4 text-center text-sm text-muted">
+                <p>Demo accounts: <strong>admin</strong> | <strong>auditor</strong></p>
+            </div>
+        </div>
+    </div>
+
+    <div id="app-wrapper" class="app-container hidden">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <img src="logo.png" alt="Junkho Studio Logo" class="logo-img">
+                    <div class="company-ssm" style="font-size: 10px; color: var(--text-muted); text-align: center; margin-top: 4px;">202503225958 (003764803-T)</div>
+                </div>
+                <button class="mobile-menu-toggle" id="mobile-menu-close">
+                    <i data-lucide="x"></i>
+                </button>
+            </div>
+            <nav class="sidebar-nav">
+                <ul>
+                    <li><a href="#" class="nav-link active" data-target="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a></li>
+                    <li class="nav-group">Transactions</li>
+                    <li><a href="#" class="nav-link" data-target="journal"><i data-lucide="file-edit"></i> Journal Entry</a></li>
+                    <li><a href="#" class="nav-link" data-target="general-ledger"><i data-lucide="book-open"></i> General Ledger</a></li>
+                    <li><a href="#" class="nav-link" data-target="bank-reconciliation"><i data-lucide="arrow-left-right"></i> Bank Reconciliation</a></li>
+                    <li class="nav-group">Compliance (Sdn Bhd)</li>
+                    <li><a href="#" class="nav-link" data-target="payroll"><i data-lucide="users"></i> Statutory Payroll</a></li>
+                    <li><a href="#" class="nav-link" data-target="sst-tax"><i data-lucide="percent"></i> SST Module</a></li>
+                    <li class="nav-group">Projects</li>
+                    <li><a href="#" class="nav-link" data-target="projects"><i data-lucide="briefcase"></i> Project List</a></li>
+                    <li class="nav-group">Internal Controls</li>
+                    <li><a href="#" class="nav-link" data-target="audit-trail"><i data-lucide="shield-check"></i> Audit Trial</a></li>
+                    <li><a href="#" class="nav-link" data-target="settings"><i data-lucide="settings"></i> System Settings</a></li>
+                    <li class="nav-group">Integrations</li>
+                    <li><a href="#" class="nav-link" data-target="data-import"><i data-lucide="download-cloud"></i> Data Sync</a></li>
+                    <li class="nav-group">Assets</li>
+                    <li><a href="#" class="nav-link" data-target="fixed-assets"><i data-lucide="monitor"></i> Fixed Assets</a></li>
+                    <li class="nav-group">Reporting</li>
+                    <li><a href="#" class="nav-link" data-target="reports"><i data-lucide="bar-chart-2"></i> Financial Reports</a></li>
+                </ul>
+            </nav>
+            <div class="sidebar-footer">
+                <div class="user-info">
+                    <div class="user-avatar">AM</div>
+                    <div class="user-details">
+                        <span class="user-name">Amirul</span>
+                        <span class="user-role">Admin</span>
+                    </div>
+                </div>
+                <a href="#" class="nav-link settings-link"><i data-lucide="settings"></i> Settings</a>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Header -->
+            <header class="top-header">
+                <div class="header-left">
+                    <button class="mobile-menu-toggle" id="mobile-menu-open">
+                        <i data-lucide="menu"></i>
+                    </button>
+                    <h1 class="page-title" id="page-title">Dashboard</h1>
+                </div>
+                <div class="header-right">
+                    <div class="search-bar">
+                        <i data-lucide="search"></i>
+                        <input type="text" placeholder="Search transactions, accounts...">
+                    </div>
+                    <button class="btn-icon notification-btn">
+                        <i data-lucide="bell"></i>
+                        <span class="badge">3</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Scrollable Content Area -->
+            <div class="content-area">
+                
+                <!-- Dashboard Section -->
+                <section id="dashboard" class="view-section active">
+                    <div class="dashboard-metrics">
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-title">Cash on Hand</span>
+                                <i data-lucide="wallet"></i>
+                            </div>
+                            <div class="metric-value">MYR 124,500.00</div>
+                            <div class="metric-trend positive"><i data-lucide="trending-up"></i> +5.2% from last month</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-title">Net Profit (YTD)</span>
+                                <i data-lucide="pie-chart"></i>
+                            </div>
+                            <div class="metric-value">MYR 82,340.00</div>
+                            <div class="metric-trend positive"><i data-lucide="trending-up"></i> +12.4% from last month</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-title">Total Payables</span>
+                                <i data-lucide="credit-card"></i>
+                            </div>
+                            <div class="metric-value">MYR 34,120.00</div>
+                            <div class="metric-trend negative"><i data-lucide="trending-up"></i> +2.1% from last month</div>
+                        </div>
+                        <div class="metric-card">
+                            <div class="metric-header">
+                                <span class="metric-title">Total Receivables</span>
+                                <i data-lucide="download"></i>
+                            </div>
+                            <div class="metric-value">MYR 45,600.00</div>
+                            <div class="metric-trend positive"><i data-lucide="trending-down"></i> -1.5% from last month</div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-charts">
+                        <div class="chart-container">
+                            <h3>Expense Breakdown</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="expenseDonutChart"></canvas>
+                            </div>
+                        </div>
+                        <div class="chart-container">
+                            <h3>Cash Flow</h3>
+                            <div class="chart-wrapper">
+                                <canvas id="cashflowBarChart"></canvas>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="recent-transactions panel">
+                        <div class="panel-header">
+                            <h3>Recent Activity</h3>
+                            <button class="btn-secondary btn-sm">View All</button>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Description</th>
+                                        <th>Account</th>
+                                        <th>Amount (MYR)</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2026-03-24</td>
+                                        <td>Hardware Supplies - Plywood</td>
+                                        <td>Cost of Goods Sold</td>
+                                        <td class="negative">-2,450.00</td>
+                                        <td><span class="status-badge success">Cleared</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-03-22</td>
+                                        <td>Invoice #INV-2603 - Client Deposit</td>
+                                        <td>Sales Revenue</td>
+                                        <td class="positive">+15,000.00</td>
+                                        <td><span class="status-badge success">Cleared</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-03-20</td>
+                                        <td>CNC Router Maintenance</td>
+                                        <td>Repairs & Maintenance</td>
+                                        <td class="negative">-850.00</td>
+                                        <td><span class="status-badge pending">Pending</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Journal Entry Section -->
+                <section id="journal" class="view-section">
+                    <div class="panel">
+                        <div class="panel-header">
+                            <h3>New Journal Entry</h3>
+                            <p class="subtitle">Record manual adjustments, depreciation, and accruals.</p>
+                        </div>
+                        <form id="journal-form" class="app-form">
+                            <div class="form-row">
+                                <div class="form-group col-md-4">
+                                    <label>Date</label>
+                                    <input type="date" value="2026-03-24" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label>Reference #</label>
+                                    <input type="text" placeholder="e.g. JE-00124" required>
+                                </div>
+                                <div class="form-group col-md-4">
+                                    <label class="flex-between">Project (Optional) <button type="button" class="btn-text btn-sm" id="btn-quick-add-project"><i data-lucide="plus-circle" style="width: 14px; height: 14px;"></i> New</button></label>
+                                    <select id="journal-project-select">
+                                        <option value="">-- None --</option>
+                                        <option value="pj1">Ampang Condo Reno</option>
+                                        <option value="pj2">Shah Alam Bungalow</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <input type="text" placeholder="Entry description" required>
+                            </div>
+
+                            <div class="journal-lines">
+                                <table class="entry-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Account</th>
+                                            <th>Description</th>
+                                            <th class="amount-col">Debit (MYR)</th>
+                                            <th class="amount-col">Credit (MYR)</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="journal-lines-body">
+                                        <tr>
+                                            <td>
+                                                <select required>
+                                                    <option value="601">601 - Depreciation Exp</option>
+                                                    <option value="101">101 - Cash in Bank</option>
+                                                    <option value="201">201 - Accounts Payable</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="text" placeholder="Line description"></td>
+                                            <td><input type="number" class="debit-input" placeholder="0.00" step="0.01"></td>
+                                            <td><input type="number" class="credit-input" placeholder="0.00" step="0.01" disabled></td>
+                                            <td><button type="button" class="btn-icon text-danger remove-line"><i data-lucide="trash-2"></i></button></td>
+                                        </tr>
+                                        <tr>
+                                            <td>
+                                                <select required>
+                                                    <option value="161">161 - Acc. Depreciation</option>
+                                                    <option value="101">101 - Cash in Bank</option>
+                                                    <option value="201">201 - Accounts Payable</option>
+                                                </select>
+                                            </td>
+                                            <td><input type="text" placeholder="Line description"></td>
+                                            <td><input type="number" class="debit-input" placeholder="0.00" step="0.01" disabled></td>
+                                            <td><input type="number" class="credit-input" placeholder="0.00" step="0.01"></td>
+                                            <td><button type="button" class="btn-icon text-danger remove-line"><i data-lucide="trash-2"></i></button></td>
+                                        </tr>
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2"><button type="button" class="btn-text" id="add-journal-line"><i data-lucide="plus"></i> Add Line</button></td>
+                                            <td class="total-col" id="total-debit">0.00</td>
+                                            <td class="total-col" id="total-credit">0.00</td>
+                                            <td></td>
+                                        </tr>
+                                    </tfoot>
+                                </table>
+                            </div>
+
+                            <div class="form-group mt-4 border-dashed p-4 rounded text-center upload-area">
+                                <i data-lucide="upload-cloud" class="upload-icon"></i>
+                                <h4>Attach Receipt/Document</h4>
+                                <p class="text-muted">Drag & drop or <span class="text-primary cursor-pointer">browse</span> PDF, JPG, PNG.</p>
+                                <input type="file" class="hidden-input">
+                            </div>
+
+                            <div class="form-actions mt-4">
+                                <button type="button" class="btn-secondary">Cancel</button>
+                                <button type="submit" class="btn-primary">Post Journal</button>
+                            </div>
+                        </form>
+                    </div>
+                </section>
+
+                <!-- General Ledger Section -->
+                <section id="general-ledger" class="view-section">
+                    <div class="panel">
+                        <div class="panel-header flex-between mb-4">
+                            <div>
+                                <h3>General Ledger</h3>
+                                <p class="subtitle">Complete double-entry transaction history.</p>
+                            </div>
+                            <div class="flex-gap">
+                                <button class="btn-secondary"><i data-lucide="filter"></i> Filters</button>
+                                <button class="btn-secondary" id="btn-export-ledger"><i data-lucide="download"></i> Export CSV</button>
+                            </div>
+                        </div>
+
+                        <div class="filters-bar mb-4">
+                            <input type="date" value="2026-03-01" class="date-filter">
+                            <span>to</span>
+                            <input type="date" value="2026-03-31" class="date-filter">
+                            
+                            <select class="account-filter ml-4">
+                                <option value="all">All Accounts</option>
+                                <option value="assets">Assets</option>
+                                <option value="liabilities">Liabilities</option>
+                                <option value="equity">Equity</option>
+                                <option value="revenue">Revenue</option>
+                                <option value="expenses">Expenses</option>
+                            </select>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Account</th>
+                                        <th>Description</th>
+                                        <th>Ref ID</th>
+                                        <th class="amount-col">Debit</th>
+                                        <th class="amount-col">Credit</th>
+                                        <th>Auditor</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2026-03-24</td>
+                                        <td>501 - Cost of Goods Sold</td>
+                                        <td>Hardware Supplies - Plywood</td>
+                                        <td>PUR-102</td>
+                                        <td class="amount-col">2,450.00</td>
+                                        <td class="amount-col"></td>
+                                        <td><span class="audit-tag">Amirul</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-03-24</td>
+                                        <td>101 - Cash in Bank</td>
+                                        <td>Hardware Supplies - Plywood</td>
+                                        <td>PUR-102</td>
+                                        <td class="amount-col"></td>
+                                        <td class="amount-col">2,450.00</td>
+                                        <td><span class="audit-tag">Amirul</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-03-22</td>
+                                        <td>101 - Cash in Bank</td>
+                                        <td>Invoice #INV-2603 - Client Deposit</td>
+                                        <td>INV-2603</td>
+                                        <td class="amount-col">15,000.00</td>
+                                        <td class="amount-col"></td>
+                                        <td><span class="audit-tag">System</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-03-22</td>
+                                        <td>401 - Sales Revenue</td>
+                                        <td>Invoice #INV-2603 - Client Deposit</td>
+                                        <td>INV-2603</td>
+                                        <td class="amount-col"></td>
+                                        <td class="amount-col">15,000.00</td>
+                                        <td><span class="audit-tag">System</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Bank Reconciliation Section -->
+                <section id="bank-reconciliation" class="view-section">
+                    <div class="panel">
+                        <div class="panel-header flex-between mb-4">
+                            <div>
+                                <h3>Bank Reconciliation</h3>
+                                <p class="subtitle">Match statement lines with system records.</p>
+                            </div>
+                            <div class="flex-gap">
+                                <button class="btn-primary" onclick="document.getElementById('bank-csv-upload').click()"><i data-lucide="upload"></i> Upload CSV</button>
+                                <input type="file" id="bank-csv-upload" class="hidden" accept=".csv">
+                            </div>
+                        </div>
+
+                        <div class="recon-summary mb-4">
+                            <div class="recon-box">
+                                <span>Statement Balance</span>
+                                <h4>MYR 125,000.00</h4>
+                            </div>
+                            <div class="recon-box">
+                                <span>System Balance</span>
+                                <h4>MYR 124,500.00</h4>
+                            </div>
+                            <div class="recon-box difference">
+                                <span>Difference</span>
+                                <h4>MYR 500.00</h4>
+                            </div>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="data-table recon-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Bank Description</th>
+                                        <th>Amount</th>
+                                        <th>Match Status</th>
+                                        <th>Action</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr class="matched-row">
+                                        <td>2026-03-24</td>
+                                        <td>POS HARDWARE CITY SDN BHD</td>
+                                        <td class="negative">-2,450.00</td>
+                                        <td><span class="match-badge exact"><i data-lucide="check-circle"></i> Exact Match</span></td>
+                                        <td><button class="btn-secondary btn-sm">Confirm</button></td>
+                                    </tr>
+                                    <tr class="unmatched-row">
+                                        <td>2026-03-23</td>
+                                        <td>BANK CHARGES</td>
+                                        <td class="negative">-15.00</td>
+                                        <td><span class="match-badge none">No Match</span></td>
+                                        <td><button class="btn-primary btn-sm">Create Rule</button></td>
+                                    </tr>
+                                    <tr class="matched-row">
+                                        <td>2026-03-22</td>
+                                        <td>IBG TRANSFER FROM CLIENT A</td>
+                                        <td class="positive">+15,000.00</td>
+                                        <td><span class="match-badge exact"><i data-lucide="check-circle"></i> Exact Match</span></td>
+                                        <td><button class="btn-secondary btn-sm">Confirm</button></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Fixed Assets Section -->
+                <section id="fixed-assets" class="view-section">
+                    <div class="panel">
+                        <div class="panel-header flex-between mb-4">
+                            <div>
+                                <h3>Fixed Asset Register</h3>
+                                <p class="subtitle">Track machinery, vehicles with depreciation.</p>
+                            </div>
+                            <button class="btn-primary"><i data-lucide="plus"></i> Add Asset</button>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Asset ID</th>
+                                        <th>Name / Description</th>
+                                        <th>Category</th>
+                                        <th>Purchase Date</th>
+                                        <th>Cost (MYR)</th>
+                                        <th>Net Book Value</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>FA-001</td>
+                                        <td>CNC Router Machine V3</td>
+                                        <td>Machinery</td>
+                                        <td>2023-05-10</td>
+                                        <td>85,000.00</td>
+                                        <td>51,000.00</td>
+                                        <td><span class="status-badge active">Active</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>FA-002</td>
+                                        <td>Toyota Hilux (Transport)</td>
+                                        <td>Vehicles</td>
+                                        <td>2024-01-15</td>
+                                        <td>110,000.00</td>
+                                        <td>88,000.00</td>
+                                        <td><span class="status-badge active">Active</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td>FA-003</td>
+                                        <td>Table Saw - Heavy Duty</td>
+                                        <td>Equipment</td>
+                                        <td>2022-08-20</td>
+                                        <td>12,500.00</td>
+                                        <td>3,000.00</td>
+                                        <td><span class="status-badge active">Active</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Reports Section -->
+                <section id="reports" class="view-section">
+                    <div class="panel">
+                        <div class="panel-header mb-4">
+                            <h3>Financial Reports</h3>
+                            <p class="subtitle">Sdn Bhd Compliance & Performance Tracking</p>
+                        </div>
+
+                        <div class="reports-grid">
+                            <div class="report-card">
+                                <div class="report-icon"><i data-lucide="trending-up"></i></div>
+                                <h4>Statement of Profit or Loss</h4>
+                                <p>Income vs Expenses (P&L) for a specified period.</p>
+                                <button class="btn-secondary w-full mt-4">Generate Report</button>
+                            </div>
+                            <div class="report-card">
+                                <div class="report-icon"><i data-lucide="scale"></i></div>
+                                <h4>Statement of Financial Position</h4>
+                                <p>Balance Sheet showing Assets, Liabilities & Equity.</p>
+                                <button class="btn-secondary w-full mt-4">Generate Report</button>
+                            </div>
+                            <div class="report-card">
+                                <div class="report-icon"><i data-lucide="list"></i></div>
+                                <h4>Trial Balance</h4>
+                                <p>List of all ledger accounts and their current balances.</p>
+                                <button class="btn-secondary w-full mt-4">Generate Report</button>
+                            </div>
+                            <div class="report-card">
+                                <div class="report-icon"><i data-lucide="clock"></i></div>
+                                <h4>Accounts Payable Aging</h4>
+                                <p>Track amounts owed to suppliers by age (30/60/90 days).</p>
+                                <button class="btn-secondary w-full mt-4">Generate Report</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Report Viewer Example -->
+                    <div class="panel mt-6 hidden" id="report-viewer">
+                        <div class="border-b pb-4 mb-4 text-center">
+                            <h3 class="mb-4" id="report-active-title">Statement of Profit or Loss (YTD)</h3>
+                            <div class="flex-center flex-gap">
+                                <button class="btn-secondary btn-sm" id="btn-print-report"><i data-lucide="printer"></i> Print</button>
+                                <button class="btn-primary btn-sm" id="btn-export-pdf"><i data-lucide="download"></i> Export PDF</button>
+                            </div>
+                        </div>
+                        <div class="report-content font-mono text-sm px-6 py-8">
+                            <div class="report-header mb-8 text-center">
+                                <img src="logo.png" alt="Junkho Studio Logo" style="height: 60px; margin-bottom: 15px;">
+                                <h2 class="text-2xl font-bold uppercase mb-2">Junkho Studio</h2>
+                                <p class="text-xs mb-1">Company No: 202503225958 (003764803-T)</p>
+                                <p class="text-xs">No 41-1 Jalan Nuetron U16/Q, Seksyen U16, Denai Alam, 40160 Shah Alam Selangor</p>
+                                <div class="border-b-2 border-slate-900 mt-6"></div>
+                            </div>
+                            <div class="flex-between py-2 border-b">
+                                <span><strong>Sales Revenue</strong></span>
+                                <span>350,000.00</span>
+                            </div>
+                            <div class="flex-between py-2 border-b pl-4">
+                                <span>Cost of Goods Sold</span>
+                                <span>(120,000.00)</span>
+                            </div>
+                            <div class="flex-between py-2 border-b border-b-2 font-bold bg-slate-50">
+                                <span>Gross Profit</span>
+                                <span>230,000.00</span>
+                            </div>
+                            <div class="py-2 mt-2 font-bold">Operating Expenses</div>
+                            <div class="flex-between py-1 pl-4 text-slate-600">
+                                <span>Rent</span>
+                                <span>24,000.00</span>
+                            </div>
+                            <div class="flex-between py-1 pl-4 text-slate-600">
+                                <span>Salaries</span>
+                                <span>85,000.00</span>
+                            </div>
+                            <div class="flex-between py-1 pl-4 text-slate-600">
+                                <span>Depreciation</span>
+                                <span>15,000.00</span>
+                            </div>
+                            <div class="flex-between py-1 pl-4 text-slate-600">
+                                <span>Utilities</span>
+                                <span>8,500.00</span>
+                            </div>
+                            <div class="flex-between py-2 border-b border-t font-bold">
+                                <span>Total Operating Expenses</span>
+                                <span>(132,500.00)</span>
+                            </div>
+                            <div class="flex-between py-2 border-b-4 font-bold text-lg mt-2">
+                                <span>Net Profit</span>
+                                <span>97,500.00</span>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Data Sync Section -->
+                <section id="data-import" class="view-section">
+                    <div class="panel">
+                        <div class="panel-header mb-4">
+                            <h3>Data Sync & Import</h3>
+                            <p class="subtitle">Upload quotations, invoices, and inventory records from your external system.</p>
+                        </div>
+                        
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 24px;">
+                            <!-- Import Settings -->
+                            <div class="import-form">
+                                <form id="import-form" class="app-form">
+                                    <div class="form-group mb-4">
+                                        <label>Document Type</label>
+                                        <select id="import-type" required>
+                                            <option value="">-- Select Type --</option>
+                                            <option value="quotation">Quotations</option>
+                                            <option value="invoice">Sales Invoices</option>
+                                            <option value="inventory">Inventory Movements</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group mt-4 border-dashed p-4 rounded text-center upload-area">
+                                        <i data-lucide="file-text" id="import-icon" class="upload-icon"></i>
+                                        <h4 id="import-title">Upload Documents</h4>
+                                        <p class="text-muted">Drag & drop your <strong>PDF</strong>, CSV or Excel files.</p>
+                                        <input type="file" class="hidden-input" id="import-file" accept=".pdf, .csv, .xlsx, .xls">
+                                        <p id="selected-file-name" class="text-primary mt-2 text-sm font-medium hidden"></p>
+                                    </div>
+                                    
+                                    <div id="import-progress" class="hidden mt-4">
+                                        <div class="flex-between mb-2 text-sm text-secondary">
+                                            <span id="import-status-text">Processing...</span>
+                                            <span id="import-percentage">0%</span>
+                                        </div>
+                                        <div style="width: 100%; background: var(--border-color); height: 6px; border-radius: 3px; overflow: hidden;">
+                                            <div id="import-bar" style="width: 0%; background: var(--primary); height: 100%; transition: width 0.3s;"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-actions mt-4 text-center">
+                                        <button type="button" class="btn-primary" style="width: 100%; justify-content: center;" id="btn-start-import"><i data-lucide="refresh-cw"></i> Start Sync</button>
+                                    </div>
+                                </form>
+                            </div>
+
+                            <!-- Import History -->
+                            <div class="import-history">
+                                <h4>Recent Sync Activity</h4>
+                                <div class="table-container mt-4">
+                                    <table class="data-table">
+                                        <thead>
+                                            <tr>
+                                                <th>Date & Time</th>
+                                                <th>Type</th>
+                                                <th>Records</th>
+                                                <th>Status</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody id="import-history-body">
+                                            <tr>
+                                                <td>Mar 24, 10:30 AM</td>
+                                                <td>Sales Invoices</td>
+                                                <td>125</td>
+                                                <td><span class="status-badge success">Completed</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Mar 23, 04:15 PM</td>
+                                                <td>Inventory</td>
+                                                <td>42</td>
+                                                <td><span class="status-badge success">Completed</span></td>
+                                            </tr>
+                                            <tr>
+                                                <td>Mar 20, 09:00 AM</td>
+                                                <td>Quotations</td>
+                                                <td>8</td>
+                                                <td><span class="status-badge pending">Warning</span></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Project List Section -->
+                <section id="projects" class="view-section">
+                    <div class="panel">
+                        <div class="panel-header flex-between mb-4">
+                            <div>
+                                <h3>Project Management</h3>
+                                <p class="subtitle">Track various renovation and design projects.</p>
+                            </div>
+                            <button class="btn-primary" id="btn-add-project"><i data-lucide="plus"></i> Create New Project</button>
+                        </div>
+
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Project Name</th>
+                                        <th>Location</th>
+                                        <th>Total Value</th>
+                                        <th>Expenses</th>
+                                        <th>Margin</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="project-list-body">
+                                    <tr>
+                                        <td><strong>Ampang Condo Reno</strong></td>
+                                        <td>Ampang Hilir</td>
+                                        <td>MYR 120,000.00</td>
+                                        <td>MYR 45,000.00</td>
+                                        <td>62.5%</td>
+                                        <td><span class="status-badge success">In Progress</span></td>
+                                    </tr>
+                                    <tr>
+                                        <td><strong>Shah Alam Bungalow</strong></td>
+                                        <td>Setia Alam</td>
+                                        <td>MYR 450,000.00</td>
+                                        <td>MYR 180,000.00</td>
+                                        <td>60%</td>
+                                        <td><span class="status-badge active">Planning</span></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Payroll Section -->
+                <section id="payroll" class="view-section">
+                    <div class="panel">
+                        <div class="panel-header flex-between mb-4">
+                            <div>
+                                <h3>Statutory Payroll (Malaysia)</h3>
+                                <p class="subtitle">Auto-calculates EPF, SOCSO, EIS & PCB.</p>
+                            </div>
+                            <button class="btn-primary" id="btn-process-payroll"><i data-lucide="plus"></i> Process Monthly Payroll</button>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Gross Pay</th>
+                                        <th>EPF (11%)</th>
+                                        <th>SOCSO/EIS</th>
+                                        <th>PCB (MTD)</th>
+                                        <th>Net Pay</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Chong Wei (Creative Lead)</td>
+                                        <td>8,500.00</td>
+                                        <td>935.00</td>
+                                        <td>52.75</td>
+                                        <td>412.00</td>
+                                        <td><strong>7,100.25</strong></td>
+                                    </tr>
+                                    <tr>
+                                        <td>Amirah (Admin Manager)</td>
+                                        <td>4,200.00</td>
+                                        <td>462.00</td>
+                                        <td>24.35</td>
+                                        <td>0.00</td>
+                                        <td><strong>3,713.65</strong></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- SST Module Section -->
+                <section id="sst-tax" class="view-section">
+                    <div class="panel">
+                        <div class="panel-header flex-between mb-4">
+                            <div>
+                                <h3>SST-02 Filing Module</h3>
+                                <p class="subtitle">Bi-monthly Sales & Service Tax summary.</p>
+                            </div>
+                            <button class="btn-secondary" id="btn-download-sst"><i data-lucide="download"></i> Download SST-02 Form</button>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6 mb-4">
+                                <div class="metric-card">
+                                    <p class="text-sm font-medium text-secondary">Output Tax (Sales)</p>
+                                    <h2 class="text-primary">MYR 12,450.00</h2>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-4">
+                                <div class="metric-card">
+                                    <p class="text-sm font-medium text-secondary">Taxable Period</p>
+                                    <h2 class="text-primary">Jan - Feb 2026</h2>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Audit Trail Section -->
+                <section id="audit-trail" class="view-section">
+                    <div class="panel">
+                        <div class="panel-header mb-4">
+                            <h3>Security & Audit Trail</h3>
+                            <p class="subtitle">Every action is recorded with high precision for audit readiness.</p>
+                        </div>
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>User</th>
+                                        <th>Action</th>
+                                        <th>Record Type</th>
+                                        <th>Detail</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>2026-03-25 00:22</td>
+                                        <td><span class="audit-tag">Amirul</span></td>
+                                        <td><span class="status-badge active">UPDATE</span></td>
+                                        <td>General Ledger</td>
+                                        <td>Generated CSV Export</td>
+                                    </tr>
+                                    <tr>
+                                        <td>2026-03-25 00:15</td>
+                                        <td><span class="audit-tag">Amirul</span></td>
+                                        <td><span class="status-badge success">CREATE</span></td>
+                                        <td>Project</td>
+                                        <td>Created "Damansara Attic"</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Settings Section -->
+                <section id="settings" class="view-section">
+                    <div class="panel">
+                        <div class="panel-header mb-4">
+                            <h3>System Configuration</h3>
+                            <p class="subtitle">Manage SST Registration, FYE, and Security.</p>
+                        </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label>Company Name</label>
+                                    <input type="text" value="Junkho Studio">
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label>SSM Registration Number</label>
+                                    <input type="text" value="202503225958 (003764803-T)">
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label>Registered Address</label>
+                                    <textarea rows="3" style="width: 100%; border-radius: 8px; border: 1px solid var(--border-color); padding: 10px; font-size: 14px;">No 41-1 Jalan Nuetron U16/Q, Seksyen U16, Denai Alam, 40160 Shah Alam Selangor</textarea>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group mb-4">
+                                    <label>Financial Year End (FYE)</label>
+                                    <input type="date" value="2026-12-31">
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label>Hard Close Period (Transaction Locking)</label>
+                                    <input type="date" value="2026-02-28">
+                                    <p class="text-xs text-muted mt-1">Transactions before this date cannot be modified.</p>
+                                </div>
+                                <div class="form-group mb-4">
+                                    <label>SST Registration Number</label>
+                                    <input type="text" value="W10-1808-32000001">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </main>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
